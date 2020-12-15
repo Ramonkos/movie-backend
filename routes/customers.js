@@ -1,27 +1,7 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const Joi = require('joi');
+const { Customer, validate } = require('../models/customers');
 
 const router = express.Router();
-
-const Customer = mongoose.model('Customer', new mongoose.Schema({
-  isGold: {
-    type: Boolean,
-    required: true
-  },
-  name: {
-    type: String,
-    required: true,
-    minlength: 3,
-    maxlength: 30
-  },
-  phone: {
-    type: String,
-    required: true,
-    minlength: 3,
-    maxlength: 30
-  }
-}));
 
 router.get('/', async (req, res) => {
   const customer = await Customer.find();
@@ -36,7 +16,7 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  const { error } = validateCustomer(req.body);
+  const { error } = validate(req.body);
   if (error) return res.send(error.details[0].message);
 
   const customer = new Customer({
@@ -49,7 +29,7 @@ router.post('/', async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
-  const { error } = validateCustomer(req.body);
+  const { error } = validate(req.body);
   if (error) return res.send(error.details[0].message);
 
   let customer = await Customer.findByIdAndUpdate(req.params.id, {
@@ -68,25 +48,5 @@ router.delete('/:id', async (req, res) => {
   if (!course) return res.status(404).send('Invalid course ID...')
   res.send(course);
 })
-
-const validateCustomer = (obj) => {
-  const schema = Joi.object().keys({
-    name: Joi
-      .string()
-      .min(3)
-      .max(30)
-      .required(),
-    isGold: Joi
-      .boolean()
-      .required(),
-    phone: Joi
-      .string()
-      .min(3)
-      .max(30)
-      .required()
-  });
-
-  return schema.validate(obj);
-};
 
 module.exports = router;
