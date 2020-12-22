@@ -36,7 +36,7 @@ const validateMovie = (obj) => {
       .max(50)
       .required(),
     genreId: Joi
-      .string()
+      .objectId()
       .required(),
     numberInStock: Joi
       .number()
