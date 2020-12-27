@@ -1,5 +1,7 @@
 const express = require('express');
 const { Customer, validate } = require('../models/customers');
+const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
 
 const router = express.Router();
 
@@ -15,7 +17,7 @@ router.get('/:id', async (req, res) => {
   res.send(customer);
 });
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.send(error.details[0].message);
 
@@ -28,7 +30,7 @@ router.post('/', async (req, res) => {
   res.send(result);
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.send(error.details[0].message);
 
@@ -43,7 +45,7 @@ router.put('/:id', async (req, res) => {
   res.send(result);
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', [auth, admin], async (req, res) => {
   const course = await Customer.findByIdAndDelete(req.params.id);
   if (!course) return res.status(404).send('Invalid course ID...')
   res.send(course);
