@@ -35,4 +35,4 @@ app.use('/api/users', users);
 app.use('/api/auth', auth);
 
 const port = 3000;
-app.listen(port, () => console.log(`Listen on port ${port}...`))
+app.listen(port, () => console.log(`Listen on port ${port}...`));

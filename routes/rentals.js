@@ -3,10 +3,11 @@ const Transaction = require('mongoose-transactions');
 const { Customer } = require('../models/customers');
 const { Movie } = require('../models/movies');
 const { validate, Rental } = require('../models/rentals');
+const auth = require('../middleware/auth');
 const transaction = new Transaction();
 const router = express.Router();
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
