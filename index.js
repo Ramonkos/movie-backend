@@ -1,13 +1,18 @@
+require('express-async-errors');
 const express = require('express');
 const mongoose = require('mongoose');
+const Joi = require('joi');
+const config = require('config');
+const winston = require('winston');
 const genres = require('./routes/genres');
 const customers = require('./routes/customers');
 const movies = require('./routes/movies');
 const rentals = require('./routes/rentals');
 const users = require('./routes/users');
 const auth = require('./routes/auth')
-const Joi = require('joi');
-const config = require('config');
+const error = require('./middleware/error');
+
+winston.add(winston.transports.File, { filename: 'logfile.log' });
 
 Joi.objectId = require('joi-objectid')(Joi);
 const app = express();
@@ -33,6 +38,7 @@ app.use('/api/movies', movies);
 app.use('/api/rentals', rentals);
 app.use('/api/users', users);
 app.use('/api/auth', auth);
+app.use(error);
 
 const port = 3000;
 app.listen(port, () => console.log(`Listen on port ${port}...`));
