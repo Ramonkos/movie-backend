@@ -12,7 +12,7 @@ const users = require('./routes/users');
 const auth = require('./routes/auth')
 const error = require('./middleware/error');
 
-winston.add(winston.transports.File, { filename: 'logfile.log' });
+//winston.add(winston.transports.File, { filename: 'logfile.log' });
 
 Joi.objectId = require('joi-objectid')(Joi);
 const app = express();
